@@ -1,0 +1,3 @@
+sspring:
+  profiles:
+    active: local
