@@ -3,3 +3,5 @@ rootProject.name = 'jpa-sample'
 include 'adapter'
 include 'application'
 include 'domain'
+
+include 'refs:user'
