@@ -19,18 +19,18 @@ class PublishedCouponTest extends SupportedCouponFixture {
     @BeforeEach
     void setUp() {
         publishedCoupon = PublishedCoupon.of(
-                "ANY_ID", ANY_USER_ID, ANY_COUPON_ID, AVAILABLE, ANY_PERIOD, NOW, NOW, 0L
+                "ANY_ID", ANY_USER_ID, ANY_COUPON, AVAILABLE, ANY_PERIOD, NOW, NOW, 0L
         );
     }
 
     @Test
     void 발행쿠폰을_생성하면_AVAILABLE_상태로_생성된다() {
-        PublishedCoupon actual = PublishedCoupon.create(ANY_USER_ID, ANY_COUPON_ID, ANY_PERIOD);
+        PublishedCoupon actual = PublishedCoupon.create(ANY_USER_ID, ANY_COUPON, ANY_PERIOD);
         assertAll(
                 () -> AssertionsForClassTypes.assertThat(actual).isNotNull(),
                 () -> AssertionsForClassTypes.assertThat(actual.getId()).isNotNull(),
                 () -> AssertionsForClassTypes.assertThat(actual.getUserId()).isNotNull(),
-                () -> AssertionsForClassTypes.assertThat(actual.getCouponId()).isNotNull(),
+                () -> AssertionsForClassTypes.assertThat(actual.getCoupon()).isNotNull(),
                 () -> AssertionsForClassTypes.assertThat(actual.getStatus()).isEqualTo(AVAILABLE),
                 () -> AssertionsForClassTypes.assertThat(actual.getPeriod()).isNotNull()
         );
@@ -39,9 +39,9 @@ class PublishedCouponTest extends SupportedCouponFixture {
     @Test
     void 발행쿠폰_생성_실패() {
         assertAll(
-                () -> assertThatThrownBy(() -> PublishedCoupon.create(null, ANY_COUPON_ID, ANY_PERIOD)).isInstanceOf(ConstraintViolationException.class),
+                () -> assertThatThrownBy(() -> PublishedCoupon.create(null, ANY_COUPON, ANY_PERIOD)).isInstanceOf(ConstraintViolationException.class),
                 () -> assertThatThrownBy(() -> PublishedCoupon.create(ANY_USER_ID, null, ANY_PERIOD)).isInstanceOf(ConstraintViolationException.class),
-                () -> assertThatThrownBy(() -> PublishedCoupon.create(ANY_USER_ID, ANY_COUPON_ID, null)).isInstanceOf(ConstraintViolationException.class)
+                () -> assertThatThrownBy(() -> PublishedCoupon.create(ANY_USER_ID, ANY_COUPON, null)).isInstanceOf(ConstraintViolationException.class)
         );
     }
 

@@ -2,6 +2,7 @@ package com.ys.domain.published_coupon;
 
 import com.fasterxml.uuid.Generators;
 import com.ys.common.SelfValidating;
+import com.ys.domain.coupon.Coupon;
 import com.ys.domain.coupon.CouponId;
 import com.ys.refs.user.domain.UserId;
 import lombok.AccessLevel;
@@ -23,7 +24,7 @@ public class PublishedCoupon extends SelfValidating<PublishedCoupon> {
     @Valid @NotNull
     private UserId userId;
     @Valid @NotNull
-    private CouponId couponId;
+    private Coupon coupon;
     @NotNull
     private Status status;
     @Valid @NotNull
@@ -35,13 +36,13 @@ public class PublishedCoupon extends SelfValidating<PublishedCoupon> {
     private PublishedCoupon(
             String id,
             UserId userId,
-            CouponId couponId,
+            Coupon coupon,
             Status status,
             Period period
     ) {
         this.id = id;
         this.userId = userId;
-        this.couponId = couponId;
+        this.coupon = coupon;
         this.status = status;
         this.period = period;
         validateSelf();
@@ -50,7 +51,7 @@ public class PublishedCoupon extends SelfValidating<PublishedCoupon> {
     public static PublishedCoupon of(
             String id,
             UserId userId,
-            CouponId couponId,
+            Coupon coupon,
             Status status,
             Period period,
             LocalDateTime createdAt,
@@ -60,7 +61,7 @@ public class PublishedCoupon extends SelfValidating<PublishedCoupon> {
         return new PublishedCoupon(
                 id,
                 userId,
-                couponId,
+                coupon,
                 status,
                 period,
                 createdAt,
@@ -69,9 +70,9 @@ public class PublishedCoupon extends SelfValidating<PublishedCoupon> {
         );
     }
 
-    public static PublishedCoupon create(UserId userId, CouponId couponId, Period period) {
+    public static PublishedCoupon create(UserId userId, Coupon coupon, Period period) {
         String id = Generators.timeBasedEpochGenerator().generate().toString();
-        return new PublishedCoupon(id, userId, couponId, Status.AVAILABLE, period);
+        return new PublishedCoupon(id, userId, coupon, Status.AVAILABLE, period);
     }
 
     public void use() {
