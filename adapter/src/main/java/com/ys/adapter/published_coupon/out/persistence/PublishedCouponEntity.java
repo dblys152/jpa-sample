@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Slf4j
+@ToString
 public class PublishedCouponEntity {
 
     @Id
@@ -27,6 +28,7 @@ public class PublishedCouponEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "coupon_id")
     private CouponEntity couponEntity;
+    @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
@@ -38,7 +40,7 @@ public class PublishedCouponEntity {
     @Version
     private Long version;
 
-    private PublishedCouponEntity(
+    public PublishedCouponEntity(
             String id,
             String userId,
             CouponEntity couponEntity,

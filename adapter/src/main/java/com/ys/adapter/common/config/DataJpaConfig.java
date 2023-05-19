@@ -1,20 +1,26 @@
 package com.ys.adapter.common.config;
 
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
+@EnableJpaAuditing
 @EntityScan("com.ys.adapter")
-@EnableJpaRepositories("com.ys.adapter")
+@EnableJpaRepositories(basePackages = "com.ys.adapter")
 public class DataJpaConfig {
 
     @Value("${spring.datasource.url}")
@@ -31,28 +37,32 @@ public class DataJpaConfig {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
+        return setHikariDataSource();
+    }
+
+    private HikariDataSource setHikariDataSource() {
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setDriverClassName(driverClassName);
+        hikariDataSource.setJdbcUrl(url);
+        hikariDataSource.setUsername(username);
+        hikariDataSource.setPassword(password);
+        return hikariDataSource;
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource());
-        em.setPackagesToScan("com.ys.adapter");
-        return em;
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            EntityManagerFactoryBuilder builder
+    ) {
+        return builder
+                .dataSource(dataSource())
+                .packages("com.ys.adapter")
+                .build();
     }
 
-    // 다른 빈 정의 및 설정
-
     @Bean
-    public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(emf);
-        return transactionManager;
+    public PlatformTransactionManager transactionManager(
+            @Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory
+    ) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 }

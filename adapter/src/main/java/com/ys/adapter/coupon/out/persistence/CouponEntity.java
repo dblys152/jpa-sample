@@ -7,15 +7,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "coupons")
 @EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Slf4j
@@ -24,7 +22,9 @@ public class CouponEntity {
 
     @Id
     private String id;
+    @Enumerated(EnumType.STRING)
     private CouponType couponType;
+    @Enumerated(EnumType.STRING)
     private DiscountType discountType;
     private Integer discountValue;
     private String description;
